@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserManagementService {
+public class UsersManagementService {
 
     @Autowired
     private UsersRepo usersRepo;
