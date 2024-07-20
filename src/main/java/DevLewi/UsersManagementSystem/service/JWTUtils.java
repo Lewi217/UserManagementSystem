@@ -2,6 +2,7 @@ package DevLewi.UsersManagementSystem.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +18,10 @@ import java.util.function.Function;
 public class JWTUtils {
 
     private SecretKey Key;
-    private static final long EXPIRATION_TIME = 86400000; //24 hours
+    private  static  final long EXPIRATION_TIME = 86400000;  //24 hours
 
     public JWTUtils(){
-        String secreteString = "pHy29apHq3asNQYM5bJauKjg3jqUsI5goL9NNBx/ICoYzwFIZCMCJoBF5qPQSGp4N9eL0hcnT4VpiL6u71w3Po3fO0Ou4aJ8j4NUBqtWVxs=\n";
+        String secreteString = "wF+ht72CoXrPoBCAazXjIaPj5yWukcYtmLGAlvg0df8=";
         byte[] keyBytes = Base64.getDecoder().decode(secreteString.getBytes(StandardCharsets.UTF_8));
         this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
@@ -33,12 +34,11 @@ public class JWTUtils {
                 .signWith(Key)
                 .compact();
     }
-
-    public String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails){
+    public  String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails){
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())
-                .issuedAt( new Date(System.currentTimeMillis()))
+                .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(Key)
                 .compact();
@@ -60,5 +60,4 @@ public class JWTUtils {
     public  boolean isTokenExpired(String token){
         return extractClaims(token, Claims::getExpiration).before(new Date());
     }
-
 }
